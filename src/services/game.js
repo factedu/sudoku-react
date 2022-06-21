@@ -15,6 +15,7 @@ export function isValidPlace(grid, row, col, number) {
     // return false;
     for (let i = 0; i < 9; i++) {
         if (grid[i][col] === number) {
+            // console.log(`${number} found at ${row},${col} : horizontal array`)
             return false;
         }
     }
@@ -30,6 +31,37 @@ export function isValidPlace(grid, row, col, number) {
         for (let j = localBoxCol; j < localBoxCol + 3; j++) {
             // console.log(i,j);
             if (grid[i][j] === number) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+export function isValidNumber(grid,row,col,number){
+    number=+number;//convert to number
+    if(!number)return true;
+    for (let i = 0; i < 9; i++) {
+        // console.log(grid[i][col]);
+        if (grid[i][col] === number && (i!==row)) {
+            console.log(`${number} found at ${i},${col} : vertical array`)
+            return false;
+        }
+    }
+    for (let i = 0; i < 9; i++) {
+        if (grid[row][i] === number && (i !== col)) {
+            console.log(`${number} found at ${row},${i} : horizontal array`)
+            return false;
+        }
+    }
+    //find in subgrid 3x3 matrix
+    let localBoxRow = row - (row % 3);
+    let localBoxCol = col - (col % 3);
+    for (let i = localBoxRow; i < localBoxRow + 3; i++) {
+        for (let j = localBoxCol; j < localBoxCol + 3; j++) {
+            // console.log(i,j);
+            if (grid[i][j] === number && (i!==row && j!==col)) {
+                console.log(`${number} found at ${i},${j} : 3x3 subgrid`)
                 return false;
             }
         }
@@ -80,11 +112,22 @@ export function puzzleToMatrix(puzzle){
 export function createPuzzleAsPerDifficulty(puzzle,level){
     //puzzle is an array of 81 elements
     const removeElements = [...Array(~~(puzzle.length*level))].map(e=>~~(Math.random()*79)); // Math.floor(puzzle.length*level);
-    console.log(removeElements);
     removeElements.map(r=>{
         puzzle[r]=null;
     })
     return puzzle;
+}
+
+export function getFilledIndexs(board){
+    const arr=[];
+    for(let i = 0; i<board.length;i++){
+        for(let j=0;j<board.length;j++){
+            if(board[i][j]!==undefined){
+                arr.push(`${i},${j}`);
+            }
+        }
+    }
+    return arr;
 }
 
 // solve(board);

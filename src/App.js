@@ -3,11 +3,12 @@ import bg from './assets/images/beams.jpg';
 import logo from './assets/images/logo.svg';
 import Board from './components/Board';
 import Button from './components/Button';
-import { board, createPuzzleAsPerDifficulty, puzzleToMatrix, solve } from './services/game';
+import { board, createPuzzleAsPerDifficulty, getFilledIndexs, puzzleToMatrix, solve } from './services/game';
 import { makepuzzle, solvepuzzle, ratepuzzle } from "sudoku";
 function App() {
   const [puzzle, setPuzzle] = useState([]);
   const [solution, setSolution] = useState([]);
+  const [disabledIndexes, setDisabledIndexes] = useState([]);
   const [gameLevel, setGameLevel] = useState(0);
   const arrTemplate = [
     ['', '', '', '', '', '', '', '', ''],
@@ -32,8 +33,9 @@ function App() {
     setPuzzle(puzzle);
     // console.log(puzzle);
     // console.log(sol);
-
-    setBoard(puzzleToMatrix(createPuzzleAsPerDifficulty([...sol],0.5)));
+    const newBoard = puzzleToMatrix(createPuzzleAsPerDifficulty([...sol], 0.4));
+    setDisabledIndexes(getFilledIndexs(newBoard));
+    setBoard(newBoard);
   }
 
   useEffect(() => {
@@ -52,7 +54,7 @@ function App() {
             <img src={logo} className="h-12" alt="Play SudokuMX" />
             <p>Dificulty Level : {gameLevel}</p>
           </div>
-          <Board board={board} setBoard={setBoard} />
+          <Board board={board} disabledIndexes={disabledIndexes} setBoard={setBoard} />
           <div className="divide-y divide-gray-300/50">
             <div className="space-y-6 py-8 text-base leading-7 text-gray-600">
               <p>SudokuMX is perfect for learning the classic Sudoku Game. Share your leader board. Keep your mind sharp.</p>
